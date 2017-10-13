@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "d25fe264-3e3a-4fb4-9011-c7d1f62a1741",
+  "alias": "DashdemoWebPart",
+  "componentType": "WebPart",
+  "version": "*", // The "*" signifies that the version should be taken from the package.json
+  "manifestVersion": 2,
+
+  /**
+   * This property should only be set to true if it is certain that the webpart does not
+   *  allow arbitrary scripts to be called
+   */
+  "safeWithCustomScriptDisabled": false,
+
+  "preconfiguredEntries": [{
+    "groupId": "d25fe264-3e3a-4fb4-9011-c7d1f62a1741",
+    "group": { "default": "Under Development" },
+    "title": { "default": "dashdemo" },
+    "description": { "default": "dashdemo description" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "description": "dashdemo"
+    }
+  }]
+}

@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.1.1",
+    "libraryName": "dashdemo",
+    "libraryId": "4f122624-27b7-4e17-920e-ecaedf2d9dcc",
+    "environment": "spo"
+  }
+}

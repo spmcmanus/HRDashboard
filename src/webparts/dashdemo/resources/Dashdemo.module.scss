@@ -1,0 +1,229 @@
+
+.MSIcons {
+  display: inline-block;
+  font-family: FabricMDL2Icons;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+}
+
+.adobeIcon:before {
+  color: rgb(211,39,32);
+  content: '\EA90';
+}
+.wordIcon:before {
+  color: rgb(43,87,154);
+  content: '\EF71';
+}
+.excelIcon:before {
+  color: rgb(33,115,70);
+  content: '\EF73';
+}
+.powerpointIcon:before {
+  color: rgb(210,71,38);
+  content: '\EF72';
+}
+.genericIcon:before {
+  color: rgb(110, 108, 107);
+  content: '\E8A5';
+}
+
+
+.buttonRight {
+  float:right !important;
+  margin-bottom: 10px;
+}
+
+.documentList {
+  max-height: 1004px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.documentCard {
+  display:inline-block;
+  width:200px;
+  margin:5px;
+  height:auto;
+  font-size: 32pt;
+  font-weight: 400;
+  border: 2px solid #eaeaea;
+}
+
+.documentCardSelected {
+  border: 5px solid slategrey !important;
+}
+
+.documentCardTitle {
+  font-size: 10pt;
+  font-weight: 600;
+  padding: 5px;
+  padding-top:10px;
+  height: 60px;
+}
+
+.documentCardFolder {
+  font-size: 8pt;
+  font-weight: 600;
+  color: #696969;
+  /* padding: 5px; */
+  background-color: whitesmoke;
+  height: 30px;
+  display: table-cell;
+  vertical-align: top;
+  width: 400px;
+  padding-left: 5px;
+  text-align: center;
+}
+
+.documentCardWord {
+  border: 1px;
+  border-left: 10px;
+  border-style: solid;
+  border-color: rgb(43,87,154);
+}
+.documentCardPdf {
+  border: 1px;
+  border-left: 10px;
+  border-style: solid;
+  border-color: rgb(211,39,32);
+}
+.documentCardPowerpoint {
+  border: 1px;
+  border-left: 10px;
+  border-style: solid;
+  border-color: rgb(210,71,38);
+}
+.documentCardExcel {
+  border: 1px;
+  border-left: 10px;
+  border-style: solid;
+  border-color: rgb(33,115,70);
+}
+.documentCardGeneric {
+  border: 1px;
+  border-left: 10px;
+  border-style: solid;
+  border-color: rgb(110, 108, 107);
+}
+
+.documentCardActivity {
+  border-top: 1px solid #eaeaea;
+  background-color: linen;
+}
+
+.docCardType {
+  font-size: smaller;
+  margin-left: 15px;
+  color:slategray;
+}
+
+.hideMe {
+  display:none;
+}
+
+.iconContainer {
+  margin-left:5px;
+  margin-top: 0px;
+  display:inline-block;
+}
+
+.incidentCardContainer {
+    float:left;
+    width:220px;
+    margin: 2px;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.documentCardTitle_small {
+  margin-left: 5px;
+  font-size: 10pt;
+  font-weight: 600;
+  margin-top: -10px;
+}
+
+.panelStyle{  
+    background: white;
+}
+
+.tableStyle{  
+    display:  table ;
+    margin-left :  50px ;
+}
+
+.folderContainer {
+  display:inline;
+  margin-left: 10px;
+  width: 500px;
+}
+
+.searchContainer {
+  width:300px;
+  margin-left:5px;
+}
+
+.searchFilterConnector {
+  margin-left: 10px;
+  margin-right: 5px;
+  margin-top: 8px;
+  font-size: 8pt;
+  color: dimgray;
+}
+
+.searchFilterContainer {
+  width:100%;
+  display:inline-flex;
+}
+
+.dashdemo {
+  .button {
+    // Our button
+    text-decoration: none;
+    height: 32px;
+
+    // Primary Button
+    min-width: 80px;
+    background-color: #0078d7;
+    border-color: #0078d7;
+    color: #ffffff;
+
+    // Basic Button
+    outline: transparent;
+    position: relative;
+    font-family: "Segoe UI WestEuropean","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    font-weight: 400;
+    border-width: 0;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 16px;
+
+    .label {
+      font-weight: 600;
+      font-size: 14px;
+      height: 32px;
+      line-height: 32px;
+      margin: 0 4px;
+      vertical-align: top;
+      display: inline-block;
+    }
+  }
+  .container {
+    max-width: 700px;
+    margin: 0px auto;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+  .listItem {
+    max-width: 715px;
+    margin: 5px auto 5px auto;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+  .row {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/dashdemo/DashdemoWebPart.js",
+      "manifest": "./src/webparts/dashdemo/DashdemoWebPart.manifest.json",
+      "outputPath": "./dist/dashdemo.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "dashdemoStrings": "webparts/dashdemo/loc/{locale}.js"
+  }
+}

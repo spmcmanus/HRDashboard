@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "hr-document-dashboard",
+    "id": "4f122624-27b7-4e17-920e-ecaedf2d9dcc",
+    "version": "1.0.2.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/hrdashboard.sppkg"
+  }
+}

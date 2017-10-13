@@ -1,0 +1,51 @@
+<DocumentCard
+												className={styles.incidentCard}
+												onClick={handler.bind(this, link)}>
+												<DocumentCardPreview { ...thisPreviewProps } />
+												<DocumentCardTitle
+													title={link.Title}
+													shouldTruncate={true}
+												/>
+												<DocumentCardActivity
+													activity={link.Created}
+													people={
+														[
+															{ name: 'Annie Lindqvist', profileImageSrc: null }
+														]
+													}
+												/>
+												<DocumentCardActions
+													actions={
+														[
+															{
+																iconProps: { iconName: 'Share' },
+																onClick: (ev: any) => {
+																	console.log('You clicked the share action.');
+																	ev.preventDefault();
+																	ev.stopPropagation();
+																},
+																ariaLabel: 'share action'
+															},
+															{
+																iconProps: { iconName: 'Pin' },
+																onClick: (ev: any) => {
+																	console.log('You clicked the pin action.');
+																	ev.preventDefault();
+																	ev.stopPropagation();
+																},
+																ariaLabel: 'pin action'
+															},
+															{
+																iconProps: { iconName: 'Ringer' },
+																onClick: (ev: any) => {
+																	console.log('You clicked the ringer action.');
+																	ev.preventDefault();
+																	ev.stopPropagation();
+																},
+																ariaLabel: 'ringer action'
+															},
+														]
+													}
+													views={432}
+												/>
+											</DocumentCard>
