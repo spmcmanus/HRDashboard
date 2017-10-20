@@ -1,6 +1,6 @@
 {
   "name": "hrdashboard",
-  "version": "1.0.2",
+  "version": "1.0.8",
   "private": true,
   "engines": {
     "node": ">=0.10.0"

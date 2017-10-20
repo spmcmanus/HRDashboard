@@ -16,11 +16,11 @@
   "preconfiguredEntries": [{
     "groupId": "d25fe264-3e3a-4fb4-9011-c7d1f62a1741",
     "group": { "default": "Under Development" },
-    "title": { "default": "dashdemo" },
-    "description": { "default": "dashdemo description" },
-    "officeFabricIconFontName": "Page",
+    "title": { "default": "HRDashboard" },
+    "description": { "default": "Layout of all PSC HR Documents" },
+    "officeFabricIconFontName": "FavoriteStarFill",
     "properties": {
-      "description": "dashdemo"
+      "description": "HRDashboard"
     }
   }]
 }

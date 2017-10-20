@@ -16,7 +16,7 @@ import {
 import Iframe from 'react-iframe';
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
-import { Dropdown, DropdownMenuItemType, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+import { Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownInternalProps } from 'office-ui-fabric-react/lib/Dropdown';
 import { autobind } from '@uifabric/utilities/lib';
 
 // Custom components
@@ -40,13 +40,16 @@ export interface linksState {
   embedClasses: string;
   cardType: number;
   folders: [{}];
-  folderSelected: {key:'',text:''};
-  selectedTitle:string;
-  searchValue:string;
+  folderSelected: { key: '', text: '' };
+  selectedTitle: string;
+  searchValue: string;
+  tagSelected: { key: '', text: '' };
+  tagList: [{}];
 }
 
 const siteName = encodeURI('PSC Employee Documents');
 let folderList = [];
+let tagList = [];
 const sitePath = "People/HR";   // for dev site use "sites/dev"
 
 export default class Dashdemo extends React.Component<IDashdemoProps, linksState> {
@@ -61,20 +64,22 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
         "linkURL": '',
         "linkDesc": '',
       }],
-      linkSelectedURL: "",
+      linkSelectedURL: null,
       rowClasses: "ms-Grid-col ms-sm12",
       embedClasses: "",
       cardType: DocumentCardType.normal,
       folders: [{}],
       folderSelected: null,
       selectedTitle: null,
-      searchValue: ""
+      searchValue: "",
+      tagSelected: null,
+      tagList: [{}]
     };
     this.onCardClick = this.onCardClick.bind(this);
     this.folderFilter = this.folderFilter.bind(this);
   }
 
-  // seach functions
+  // search functions
   public searchOnChange(searchValue) {
     if (searchValue == '') {
       this.componentDidMount();
@@ -82,34 +87,63 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
   }
 
   public search(searchValue) {
-    console.log("searching...")
     let filteredLinks = this.state.links;
     for (var x = 0; x < filteredLinks.length; x++) {
       if (filteredLinks[x]["Name"].toLowerCase().indexOf(searchValue.toLowerCase()) >= 0) {
         filteredLinks[x]["displayMode"] = true;
-      } else if (filteredLinks[x]["Author"].Title.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0) {
+      } else if (filteredLinks[x]["ModifiedBy"].Title.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0) {
         filteredLinks[x]["displayMode"] = true;
       } else {
         filteredLinks[x]["displayMode"] = false;
       }
     }
-    this.updateState(filteredLinks, null, null, null, DocumentCardType.normal, null, {key:'',text:''},null,searchValue);
+    this.updateState(filteredLinks, null, null, null, DocumentCardType.normal, null, { key: '', text: '' }, null, searchValue, { key: '', text: '' }, null);
   }
 
   @autobind
   public folderFilter(item: IDropdownOption) {
     let filteredLinks = this.state.links;
     for (var x = 0; x < filteredLinks.length; x++) {
-      if (filteredLinks[x]["folder"].toLowerCase().indexOf(item.key.toString().toLowerCase()) < 0) {
+      if (filteredLinks[x]["folder"]["Name"].toLowerCase().indexOf(item.key.toString().toLowerCase()) < 0) {
         filteredLinks[x]["displayMode"] = false;
       } else {
         filteredLinks[x]["displayMode"] = true;
       }
     }
-    this.updateState(filteredLinks, null, null, null, null, null,item,null,"");
+    this.updateState(filteredLinks, null, null, null, null, null, item, null, "", { key: '', text: '' }, null);
   }
 
-  public updateState(links, linkSelectedURL, rowClasses, embedClasses, cardType, folders, folderSelected, selectedTitle, searchValue) {
+  public folderSelect(folderName:string) {
+    let filteredLinks = this.state.links;
+    for (var x = 0; x < filteredLinks.length; x++) {
+      if (filteredLinks[x]["folder"]["Name"].toLowerCase().indexOf(folderName.toLowerCase()) < 0) {
+        filteredLinks[x]["displayMode"] = false;
+      } else {
+        filteredLinks[x]["displayMode"] = true;
+      }
+    }
+    this.updateState(filteredLinks, '', null, null, null, null, {key:folderName,text:folderName}, null, "", { key: '', text: '' }, null);
+  }
+
+  @autobind
+  public tagFilter(item: IDropdownOption) {
+    let filteredLinks = this.state.links;
+    if (item.key != undefined) {
+      for (var x = 0; x < filteredLinks.length; x++) {
+        let docTags = filteredLinks[x]["ListItemAllFields"].TaxKeyword.results;
+        let displayMode = false;
+        lodash.map(docTags, (result) => {
+          if (result["Label"].toLowerCase().indexOf(item.key.toString().toLowerCase()) >= 0) {
+            displayMode = true;
+          }
+        });
+        filteredLinks[x]["displayMode"] = displayMode;
+      }
+    }
+    this.updateState(filteredLinks, null, null, null, null, null, { key: '', text: '' }, null, "", item, null);
+  }
+
+  public updateState(links, linkSelectedURL, rowClasses, embedClasses, cardType, folders, folderSelected, selectedTitle, searchValue, tagSelected, tagList) {
     // only update state paramters that are passed in to the function
     if (links == null) { links = this.state.links; }
     if (linkSelectedURL == null) { linkSelectedURL = this.state.linkSelectedURL; }
@@ -120,8 +154,9 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
     if (folderSelected == null) { folderSelected = this.state.folderSelected; }
     if (selectedTitle == null) { selectedTitle = this.state.selectedTitle; }
     if (searchValue == null) { searchValue = this.state.searchValue; }
-     // update state
-     console.log("update state")
+    if (tagSelected == null) { tagSelected = this.state.tagSelected; }
+    if (tagList == null) { tagList = this.state.tagList; }
+    // update state
     this.setState({
       links: links,
       linkSelectedURL: linkSelectedURL,
@@ -131,7 +166,9 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
       folders: folders,
       folderSelected: folderSelected,
       selectedTitle: selectedTitle,
-      searchValue: searchValue
+      searchValue: searchValue,
+      tagSelected: tagSelected,
+      tagList: tagList
     });
   }
 
@@ -142,27 +179,26 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
     const fileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
     const fileEmbedList = 'doc~docx~xls~xlsx~ppt~pptx~pdf';
     const selectedTitle = jquery(e.target).closest('.ms-DocumentCard').find('div[class^="documentCardTitle"]').text();
-    console.log('oncardclick',selectedTitle)
     if (fileEmbedList.indexOf(fileExt) >= 0) {
-      const folder = encodeURI(link.folder);
+      const folder = encodeURI(link.folder["Name"]);
       let attachmentURL = window.location.origin + "/" + sitePath + "/" + siteName + "/Forms/AllItems.aspx";
       attachmentURL += "?id=/" + sitePath + "/" + siteName + "/" + folder + "/" + fileName;
       attachmentURL += "&parent=/" + sitePath + "/" + siteName + "/" + folder;
-      console.log("attachmentURL",attachmentURL)
-      this.updateState(null, attachmentURL, 'ms-Grid-col ms-sm4', '', DocumentCardType.compact, null,null,selectedTitle,"");
+      this.updateState(null, attachmentURL, 'ms-Grid-col ms-sm4', '', DocumentCardType.compact, null, null, selectedTitle, "", null, null);
     } else {
       window.open(link.ServerRelativeUrl, '_blank', 'rel="noopener"').focus();
     }
   }
 
   public clearSelected() {
-    this.updateState(null, '', null, null,  DocumentCardType.normal, null, null,null,"");
+    this.updateState(null, '', null, null, DocumentCardType.normal, null, null, null, "", null, null);
   }
 
   public getFiles(folders, reactHandler) {
     let files = [];
+    let tagList = [];
     lodash.map(folders, (folder) => {
-      const fileURL = window.location.origin + "/" + sitePath + "/_api/Web/GetFolderByServerRelativeUrl('PSC%20Employee%20Documents/" + folder + "')/Files?$expand=Author";
+      const fileURL = window.location.origin + "/" + sitePath + "/_api/Web/GetFolderByServerRelativeUrl('PSC%20Employee%20Documents/" + folder["Name"] + "')/Files?$expand=ModifiedBy,ListItemAllFields"; //Author";
       jquery.ajax({
         url: fileURL,
         type: "GET",
@@ -173,6 +209,10 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
             result['folder'] = folder;
             result['displayMode'] = true;
             files.push(result);
+            //update tag list
+            lodash.map(result['ListItemAllFields'].TaxKeyword.results, (result) => {
+              tagList.push(result['Label']);
+            });
           });
         },
         error: (jqXHR, textStatus, errorThrown) => {
@@ -181,19 +221,20 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
           console.log('error', errorThrown);
         },
         complete: (jqXHR, textStatus) => {
-          this.updateState(files, '', 'ms-Grid-col ms-sm12', '', DocumentCardType.normal, folders, null,null,"");
+          tagList = lodash.uniq(tagList).sort();
+          let defaultTag = { key: this.props.defaultTag, text: this.props.defaultTag};
+          this.updateState(files, '' , 'ms-Grid-col ms-sm12', '', DocumentCardType.normal, folders, null, null, "", defaultTag , tagList);
+          this.tagFilter(defaultTag);
         }
       });
     });
-
   }
 
   public componentDidMount() {
-    console.log("componentDidMount")
     var reactHandler = this;
     const rootUrl = window.location.origin;
     const listName = "DashboardLinks";
-    const folderURL = rootUrl + "/" + sitePath + "/_api/Web/GetFolderByServerRelativeUrl('PSC%20Employee%20Documents')/Folders";
+    const folderURL = rootUrl + "/" + sitePath + "/_api/Web/GetFolderByServerRelativeUrl('PSC%20Employee%20Documents')/Folders?$expand=ListItemAllFields";
     let folders = [];
     jquery.ajax({
       url: folderURL,
@@ -203,7 +244,7 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
       success: (resultData) => {
         lodash.map(resultData.d.results, (result) => {
           if (result['Name'] != 'Forms') {
-            folders.push(result['Name']);
+            folders.push({ Name: result['Name'], OrderBy: result['ListItemAllFields'].OrderBy });
           }
         });
       },
@@ -219,10 +260,8 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
   }
 
   public componentDidUpdate() {
-    console.log("componentDidUpdate")
     //wait for DOM then scroll to selected document
     if (this.state.selectedTitle != null) {
-      console.log("windowrequestanimationframe")
       window.requestAnimationFrame(() => {
         jquery('div[class*="documentCardSelected"]').get(0).scrollIntoView();
       });
@@ -239,16 +278,21 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
   };
 
   public render(): React.ReactElement<IDashdemoProps> {
-    console.log("render")
-    folderList = this.state.folders.map(item => ({ key: item, text: item }));
-    let showLinks = this.sortArray(this.state.links);  
-    if (showLinks[0].Name == '') {
+    // Folder List
+    folderList = this.state.folders.map(item => ({ key: item["Name"], text: item["Name"], orderBy: item["OrderBy"] }));
+    folderList.sort((a,b) => {
+      return (a["orderBy"] > b["orderBy"]) ? 1 : ((b["orderBy"] > a["orderBy"]) ? -1 : 0);
+    });
+    tagList = this.state.tagList.map(item => ({ key: item, text: item }));
+    let showLinks = this.sortArray(this.state.links);
+    console.log("showLinks",showLinks);
+    //if (showLinks[0].Name == '') {
+    if (showLinks.length <= 1) {
       return (
-        <div>Loading...</div>
-      );
+        <div className="searchFilterConnector">Loading...</div>
+      ); 
     } else if (this.state.linkSelectedURL != '') {
       const docList = 'ms-Grid-col ms-sm3 ' + styles.documentList;
-      console.log('this.state',this.state)
       return (
         <div id="mainContainer">
           <div className="ms-Grid">
@@ -276,9 +320,9 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
               </div>
               <div className="ms-Grid-col ms-sm9">
                 <div>
-                  <iframe 
+                  <iframe
                     src={this.state.linkSelectedURL}
-                    height="1000px" 
+                    height="1000px"
                     width="100%">
                   </iframe>
                 </div>
@@ -287,42 +331,33 @@ export default class Dashdemo extends React.Component<IDashdemoProps, linksState
           </div>
         </div>
       );
-      /*
-      <Iframe url={this.state.linkSelectedURL}
-        width="100%"
-        height="1000px"
-        display="initial"
-        position="relative"
-        allowFullScreen>
-      </Iframe>
-      */
     } else {
-      console.log("else")
-      console.log('this.state',this.state)
       const theseIncidents = this.state.links;
       let { folderSelected } = this.state;
+      let { tagSelected } = this.state;
       return (
         <div className="ms-Grid">
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm12">
               <div className={styles.searchFilterContainer}>
-                <div className={styles.searchContainer}>
-                  <SearchBox
-                    labelText='Search file name or author'
-                    onChange={(newValue) => this.searchOnChange(newValue)}
-                    onSearch={(newValue) => this.search(newValue)}
-                    value={this.state.searchValue}
-                  />
-                </div>
-                <div className={styles.searchFilterConnector}>- or -</div> 
+                <div className={styles.searchFilterConnector}>Filter file list on tag: </div>
                 <div className={styles.folderContainer}>
                   <Dropdown
                     label=''
-                    id='folderFilterSelect'
-                    placeHolder='Filter list on folder'
-                    onChanged={this.folderFilter}
-                    options={folderList}
-                    selectedKey={ folderSelected && folderSelected.key}
+                    id='tagFilterSelect'
+                    placeHolder='Choose filter...'
+                    onChanged={this.tagFilter}
+                    options={tagList}
+                    selectedKey={tagSelected && tagSelected.key}
+                  />
+                </div>
+                <div className={styles.searchFilterConnector}>Or search file name and author: </div>
+                <div className={styles.searchContainer}>
+                  <SearchBox
+                    labelText='Enter search keyword...'
+                    onChange={(newValue) => this.searchOnChange(newValue)}
+                    onSearch={(newValue) => this.search(newValue)}
+                    value={this.state.searchValue}
                   />
                 </div>
               </div>

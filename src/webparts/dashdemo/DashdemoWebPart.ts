@@ -7,7 +7,6 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-webpart-base';
 
-import * as strings from 'dashdemoStrings';
 import Dashdemo from './components/Dashdemo';
 import { IDashdemoProps } from './components/IDashdemoProps';
 import { IDashdemoWebPartProps } from './IDashdemoWebPartProps';
@@ -18,7 +17,8 @@ export default class DashdemoWebPart extends BaseClientSideWebPart<IDashdemoWebP
     const element: React.ReactElement<IDashdemoProps > = React.createElement(
       Dashdemo,
       {
-        description: this.properties.description
+        title: this.properties.title,
+        defaultTag: this.properties.defaultTag
       }
     );
 
@@ -33,15 +33,16 @@ export default class DashdemoWebPart extends BaseClientSideWebPart<IDashdemoWebP
     return {
       pages: [
         {
-          header: {
-            description: strings.PropertyPaneDescription
-          },
           groups: [
             {
-              groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneTextField('title', {
+                  label: 'Title',
+                  value: 'HR Dashboard'
+                }),
+                PropertyPaneTextField('defaultTag', {
+                  label: 'Default Tag Name',
+                  value: 'HRHome'
                 })
               ]
             }

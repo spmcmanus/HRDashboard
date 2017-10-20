@@ -16,6 +16,7 @@ import {
 import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { Link } from 'office-ui-fabric-react/lib/Link';
 
 // Custom components and properties
 import { IDashdemoProps } from './IDashdemoProps';
@@ -53,13 +54,14 @@ export default class LinkListContainer extends React.Component<any, localState> 
       filename = null;
     }
     if (filename != null) {
-      const fullUrl = window.location.origin + "/sites/HRTest/SiteAssets/" + filename;
+      const fullUrl = window.location.origin + "/sites/HRDashboard/SiteAssets/" + filename;
+      //const fullUrl = window.location.origin + "/sites/dev/SiteAssets/" + filename;
       return fullUrl;
     } else {
       return null;
     }
   }
-
+  
   public getIconStyling(fileExt, selected) {
     let fileExtClassNormal = '';
     let fileExtClassCompact = '';
@@ -105,6 +107,7 @@ export default class LinkListContainer extends React.Component<any, localState> 
         <div className="ms-Grid-row">
           <div className="ms-Grid-col ms-sm12">
             {links.map((link, key) => {
+              
               if (link.displayMode == true) {
                 const date = new Date(link.TimeCreated);
                 var formatOptions = {
@@ -141,28 +144,34 @@ export default class LinkListContainer extends React.Component<any, localState> 
                 } else {
                   selected = false;
                 }
-                var thisFolder = link.folder;
-
+                var thisFolder = link.folder["Name"];
+            
                 if (this.props.cardType == 0) {
                   // Normal Document Card Size
+                  let tags = link.ListItemAllFields.TaxKeyword.results;
+                  let displayTag = [];
+                  if (tags.length > 0) {
+                    tags.map((tag) => {
+                      displayTag.push(tag.Label);
+                    });
+                  } 
                   return (
                     <DocumentCard
                       className={styles.documentCard}
                       onClick={handler.bind(this, link)}>
                       <div>
                         <div className={styles.documentCardFolder}>
-                          {thisFolder}
+                          {displayTag.join(' \u00B7 ')}
                         </div>
                         <div className={styles.documentCardTitle}>
                           {thisTitle}
                         </div>
-
                       </div>
                       <div className={styles.documentCardActivity}>
                         <DocumentCardActivity
                           activity={displayDate}
                           people={[{
-                            name: link.Author.Title,
+                            name: link.ModifiedBy.Title,
                             profileImageSrc: this.getImageSrc(fileExt)
                           }]}
                         />
@@ -184,7 +193,7 @@ export default class LinkListContainer extends React.Component<any, localState> 
                           <DocumentCardActivity
                             activity={displayDate}
                             people={[{
-                              name: link.Author.Title,
+                              name: link.ModifiedBy.Title,
                               profileImageSrc: this.getImageSrc(fileExt)
                             }]}
                           />

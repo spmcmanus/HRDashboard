@@ -1,3 +1,4 @@
 export interface IDashdemoWebPartProps {
-  description: string;
+  title: string;
+  defaultTag: string;
 }
